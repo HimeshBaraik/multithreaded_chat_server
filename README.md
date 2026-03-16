@@ -40,20 +40,18 @@ Client Handler (AcceptThread)
 recv() → broadcast → send()
 ```
 
-### Key Idea
+## Thread Pool
 
-Instead of creating **one thread per client**, the server uses a **fixed number of worker threads**.
+A custom **thread pool** was implemented to efficiently handle large numbers of tasks. Instead of creating a new thread for every task, a fixed set of worker threads continuously pulls tasks from a queue and executes them.
 
-Example:
+During stress testing (task spamming), the **thread pool significantly reduced CPU usage—approximately by half** compared to the thread-per-task approach.The main reason for this improvement is **reduced context switching**.
+Benchmark results and CPU usage comparisons are shown in the screenshots below.
+1.  Without ThreadPool
+<img width="404" height="308" alt="1" src="https://github.com/user-attachments/assets/2c84f06c-4ba3-4b21-9962-1ce8c640cd27" />
 
-```
-1000 clients
-     ↓
-16 worker threads
-```
 
-This significantly improves scalability.
-
+2. With ThreadPool
+<img width="404" height="308" alt="2" src="https://github.com/user-attachments/assets/4e83d44a-65dc-4803-8758-d8f0c851fa9d" />
 
 ---
 
@@ -132,16 +130,29 @@ close socket
 # Running the Server
 
 ```
-./server.exe
+./server/main.exe
 ```
 
-Example output:
+output:
 
 ```
 server program
 Server has started listening on port 12345
 Waiting for client to connect...
 ```
+
+Running the client: on other terminal
+```
+./client/main.exe
+```
+output: 
+
+```
+client program
+Enter your chat name: 
+```
+
+output:
 
 ---
 
